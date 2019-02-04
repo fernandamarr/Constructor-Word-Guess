@@ -1,16 +1,20 @@
 // Constructor function for defining word guess
-function Letter(letter, guessed) {
+var Letter = function(letter) {
     this.letter = letter;
-    this.guessed = guessed;
-    this.char = function () {
+    this.guessed = false;
+
+    // check if letter was guessed
+    this.showLetter = function () {
         if (!this.guessed) {
-            return "_";
+            return " _ ";
         } else {
             return this.letter;
         }
     }
-    this.guessLetter = function (character) {
-        if (character === this.letter) {
+
+    // check if letter was guessed correctly, change guessed var to true
+    this.check = function (guess) {
+        if (guess.toLowerCase() === this.letter.toLowerCase()) {
             this.guessed = true;
         }
     }
