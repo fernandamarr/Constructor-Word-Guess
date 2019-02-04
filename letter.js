@@ -3,7 +3,7 @@ var Letter = function(letter) {
     this.letter = letter;
     this.guessed = false;
 
-    // check if letter was guessed
+    // check if letter was guessed, return underscore
     this.showLetter = function () {
         if (!this.guessed) {
             return " _ ";

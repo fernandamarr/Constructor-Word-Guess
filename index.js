@@ -4,18 +4,12 @@ var colors = require("colors");
 
 var wordBank = ["pikachu", "charmander", "squirtle", "eevee", "snorlax", "bulbasaur", "dragonite", "togepi", "seel", "ponyta"];
 
-// Select random word from wordBank
-var random = Math.floor(Math.random() * wordBank.length);
-chosenWord = wordBank[random];
-// Store random word in Word constructor
-currentWord = new Word(chosenWord);
-currentWord.createWord();
-
 var onlyLetters = /[a-zA-Z]/;
 var lettersGuessed = [];
 var checkInput = [];
-var guessesLeft = 10;
+var guessesLeft = 3;
 
+// Intro to game prompt
 var readyToStart = function () {
     console.log("\nHey there! Welcome to Word Guess - Pokemon Edition!!\n")
     console.log("-------------------------------------------------------");
@@ -33,19 +27,27 @@ var readyToStart = function () {
     ]).then(function (answers) {
         if (answers.ready) {
             console.log("\nWelcome " + answers.name + ". This is Word Guess - Pokemon Edition!" + "\n\nGotta catch 'em all!".rainbow + "\n")
-            startGame(currentWord, chosenWord);
+            play();
         } else {
             console.log("\nOkay, but you're missing out!");
         }
     })
 }
 
+// Randomize words and call start game function
+var play = function () {
+    // Select random word from wordBank
+    var random = Math.floor(Math.random() * wordBank.length);
+    chosenWord = wordBank[random];
+    // Store random word in Word constructor
+    currentWord = new Word(chosenWord);
+    currentWord.createWord();
+    startGame(currentWord, chosenWord);
+}
+
+// Game prompt for guesses
 var startGame = function (currentWord, chosenWord) {
     console.log(currentWord.createWord());
-    currentWord.letterArr.forEach(function (elem) {
-        lettersGuessed.push(elem.letter);
-    })
-
     if (guessesLeft) {
 
         //testing
@@ -72,15 +74,25 @@ var startGame = function (currentWord, chosenWord) {
     }
 }
 
+// Check if user input is correct
 var checkInput = function (data) {
+    if (lettersGuessed.includes(data.userGuess)) {
+        console.log("You already guessed that. Try again".cyan);
+        startGame(currentWord, chosenWord);
 
-    if (chosenWord.includes(data.userGuess)) {
-        console.log("THAT IS CORRECT!".cyan);
-        
     } else {
-        console.log("INCORRECT!".cyan);
-        guessesLeft--;
-        console.log("You have " + guessesLeft + " guesses left")
+        if (chosenWord.includes(data.userGuess)) {
+            lettersGuessed.push(data.userGuess);
+            console.log("THAT IS CORRECT!".cyan);
+            startGame(currentWord, chosenWord);
+
+        } else {
+            console.log("INCORRECT!".cyan);
+            lettersGuessed.push(data.userGuess);
+            guessesLeft--;
+            console.log("You have " + guessesLeft + " guesses left")
+            startGame(currentWord, chosenWord);
+        }
     }
 }
 
@@ -88,14 +100,18 @@ var checkInput = function (data) {
 var playAgain = function () {
     if (guessesLeft === 0) {
         inquirer.prompt([{
-            name: "restart",
+            name: "playAgain",
+            type: "list",
             message: "Want to try again?",
-            choices: ["Yes, gotta catch 'em all!", "No, I'm done"]
-        }]).then(function (answer) {
-            if (answer.choices[0]) {
-                startGame();
-            } else {
-                answer.end();
+            choices: ["Yes, gotta catch 'em all!", "No, I'm good"]
+        }]).then(function (answers) {
+            if (answers.playAgain === "Yes, gotta catch 'em all!") {
+                console.log("PLAY AGAIN")
+                guessesLeft = 3;
+                play();
+            }
+            if (answers.playAgain === "No, I'm good") {
+                console.log("GAME OVER".red);
             }
         })
     }
