@@ -6,7 +6,7 @@ var Letter = function(letter) {
     // check if letter was guessed, return underscore
     this.showLetter = function () {
         if (!this.guessed) {
-            return " _ ";
+            return "_ ";
         } else {
             return this.letter;
         }

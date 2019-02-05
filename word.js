@@ -33,9 +33,15 @@ var Word = function (currentWord) {
     this.checkAnswer = function (guess) {
         this.letterArr.forEach(function (elem) {
             if (elem.letter) {
-                elem.checkAnswer(guess);
+                elem.check(guess);
             } 
         })
+    }
+
+    this.isRight = function(guess) {
+        if(guess.join() === currentWord.join()) {
+            console.log("YOU WIN")
+        }
     }
 }
 

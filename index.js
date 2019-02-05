@@ -1,7 +1,3 @@
-// Left To Do:
-// Replace underscores with user input
-// If letter is completely guessed correcrlty, user wins
-
 var Word = require("./word.js");
 var inquirer = require("inquirer");
 var colors = require("colors");
@@ -9,8 +5,8 @@ var colors = require("colors");
 var wordBank = ["pikachu", "charmander", "squirtle", "eevee", "snorlax", "bulbasaur", "dragonite", "togepi", "seel", "ponyta"];
 
 var onlyLetters = /[a-zA-Z]/;
-var lettersGuessed = [];
-var checkInput = [];
+var rightLettersGuessed = [];
+var wrongLettersGuessed = [];
 var guessesLeft = 10;
 
 // Intro to game prompt
@@ -73,27 +69,25 @@ var startGame = function (currentWord, chosenWord) {
         })
     } else {
         console.log("\nYou're out of guesses! The pokemon that got away was " + chosenWord.toUpperCase().rainbow + "\n");
-        playAgain();
+        
     }
 }
 
 // Check if user input is correct
 var checkInput = function (data) {
-    if (lettersGuessed.includes(data.userGuess)) {
+    if (rightLettersGuessed.includes(data.userGuess) || wrongLettersGuessed.includes(data.userGuess)) {
         console.log("You already guessed that. Try again".cyan);
         startGame(currentWord, chosenWord);
     } else {
+        currentWord.checkAnswer(data.userGuess);
         if (chosenWord.includes(data.userGuess)) {
-            lettersGuessed.push(data.userGuess);
+            rightLettersGuessed.push(data.userGuess);
             console.log("THAT IS CORRECT!".cyan + "\n");
-
-            // ******** need to replace the underscore with user guess ******** buthow
-            // push data.userGuess to createWord() ?
-
             startGame(currentWord, chosenWord);
+            playAgain();
         } else {
             console.log("INCORRECT!".cyan);
-            lettersGuessed.push(data.userGuess);
+            wrongLettersGuessed.push(data.userGuess);
             guessesLeft--;
             console.log("You have " + guessesLeft + " guesses left\n")
             startGame(currentWord, chosenWord);
@@ -101,17 +95,19 @@ var checkInput = function (data) {
     }
 }
 
-// Prompt user if they want to play again
-var playAgain = function () {
-    if (guessesLeft === 0) {
+var playAgain = function() {
+    if (guessesLeft === 0 || rightLettersGuessed.length === chosenWord.length) {
         inquirer.prompt([{
             name: "playAgain",
             type: "list",
-            message: "Want to try again?",
+            message: "Want to play again?",
             choices: ["Yes, gotta catch 'em all!", "No, I'm good"]
         }]).then(function (answers) {
             if (answers.playAgain === "Yes, gotta catch 'em all!") {
+                onlyLetters = /[a-zA-Z]/;
                 guessesLeft = 10;
+                rightLettersGuessed = [];
+                wrongLettersGuessed = [];
                 play();
             }
             if (answers.playAgain === "No, I'm good") {
