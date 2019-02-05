@@ -9,7 +9,7 @@ var rightLettersGuessed = [];
 var wrongLettersGuessed = [];
 var guessesLeft = 10;
 
-// Intro to game prompt
+// Intro to game promptd
 var readyToStart = function () {
     console.log("\nHey there! Welcome to Word Guess - Pokemon Edition!!\n")
     console.log("-------------------------------------------------------");
@@ -51,7 +51,7 @@ var startGame = function (currentWord, chosenWord) {
     if (guessesLeft) {
 
         // testing
-        console.log(chosenWord)
+        // console.log(chosenWord)
 
         inquirer.prompt([{
             name: "userGuess",
@@ -97,6 +97,7 @@ var checkInput = function (data) {
 
 var playAgain = function() {
     if (guessesLeft === 0 || rightLettersGuessed.length === chosenWord.length) {
+      
         inquirer.prompt([{
             name: "playAgain",
             type: "list",

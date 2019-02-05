@@ -1,12 +1,10 @@
 # Constructor Word Guess
 
-The Constructor Word Guess - Pokemon Edition is a command-line game using constructor functions.
-
-![gif](./images/constructor-gif.gif)
+The Constructor Word Guess is a command-line game that runs by using Node.js and constructor functions.
 
 ## Demo
 
-Video: Coming soon.
+![gif](./images/constructor-gif.gif)
 
 ## Getting Started
 
