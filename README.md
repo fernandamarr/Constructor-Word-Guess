@@ -2,7 +2,7 @@
 
 The Constructor Word Guess - Pokemon Edition is a command-line game using constructor functions.
 
-![gif](./images/image.gif)
+![gif](./images/constructor-gif.gif)
 
 ## Demo
 
