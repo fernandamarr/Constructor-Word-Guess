@@ -1,3 +1,7 @@
+// Left To Do:
+// Replace underscores with user input
+// If letter is completely guessed correcrlty, user wins
+
 var Word = require("./word.js");
 var inquirer = require("inquirer");
 var colors = require("colors");
@@ -7,7 +11,7 @@ var wordBank = ["pikachu", "charmander", "squirtle", "eevee", "snorlax", "bulbas
 var onlyLetters = /[a-zA-Z]/;
 var lettersGuessed = [];
 var checkInput = [];
-var guessesLeft = 3;
+var guessesLeft = 10;
 
 // Intro to game prompt
 var readyToStart = function () {
@@ -26,7 +30,7 @@ var readyToStart = function () {
         }
     ]).then(function (answers) {
         if (answers.ready) {
-            console.log("\nWelcome " + answers.name + ". This is Word Guess - Pokemon Edition!" + "\n\nGotta catch 'em all!".rainbow + "\n")
+            console.log("\nWelcome " + answers.name.bgMagenta + "! This is Word Guess - Pokemon Edition." + "\n\nGotta catch 'em all!".rainbow + "\n")
             play();
         } else {
             console.log("\nOkay, but you're missing out!");
@@ -50,7 +54,7 @@ var startGame = function (currentWord, chosenWord) {
     console.log(currentWord.createWord());
     if (guessesLeft) {
 
-        //testing
+        // testing
         console.log(chosenWord)
 
         inquirer.prompt([{
@@ -59,17 +63,16 @@ var startGame = function (currentWord, chosenWord) {
             message: "\nType a letter and press enter: ".yellow,
             validate: function validateLetter(input) {
                 if (!input.match(onlyLetters)) {
-                    return "Try again. Type in only letters".red;
+                    return "Try again. Type only letters".red;
                 } else {
                     return true;
                 }
             }
         }]).then(function (data) {
             checkInput(data)
-
         })
     } else {
-        console.log("\nYou're out of guesses! The pokemon that got away was " + chosenWord.toUpperCase().rainbow);
+        console.log("\nYou're out of guesses! The pokemon that got away was " + chosenWord.toUpperCase().rainbow + "\n");
         playAgain();
     }
 }
@@ -79,18 +82,20 @@ var checkInput = function (data) {
     if (lettersGuessed.includes(data.userGuess)) {
         console.log("You already guessed that. Try again".cyan);
         startGame(currentWord, chosenWord);
-
     } else {
         if (chosenWord.includes(data.userGuess)) {
             lettersGuessed.push(data.userGuess);
-            console.log("THAT IS CORRECT!".cyan);
-            startGame(currentWord, chosenWord);
+            console.log("THAT IS CORRECT!".cyan + "\n");
 
+            // ******** need to replace the underscore with user guess ******** buthow
+            // push data.userGuess to createWord() ?
+
+            startGame(currentWord, chosenWord);
         } else {
             console.log("INCORRECT!".cyan);
             lettersGuessed.push(data.userGuess);
             guessesLeft--;
-            console.log("You have " + guessesLeft + " guesses left")
+            console.log("You have " + guessesLeft + " guesses left\n")
             startGame(currentWord, chosenWord);
         }
     }
@@ -106,12 +111,11 @@ var playAgain = function () {
             choices: ["Yes, gotta catch 'em all!", "No, I'm good"]
         }]).then(function (answers) {
             if (answers.playAgain === "Yes, gotta catch 'em all!") {
-                console.log("PLAY AGAIN")
-                guessesLeft = 3;
+                guessesLeft = 10;
                 play();
             }
             if (answers.playAgain === "No, I'm good") {
-                console.log("GAME OVER".red);
+                console.log("\nGAME OVER".red);
             }
         })
     }
